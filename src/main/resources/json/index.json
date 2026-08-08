@@ -1,0 +1,8 @@
+{
+  "examples": [
+    "create-task.json",
+    "get-task.json",
+    "complete-task.json",
+    "kafka-create-task.json"
+  ]
+}

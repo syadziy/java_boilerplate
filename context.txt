@@ -1,0 +1,30 @@
+saya ingin membuat boilerplate java dengan java 21
+buatkan contoh service sederhana dengan structure code sesuai dengan agents.md di centralized_alert atau scheduler
+
+src/main/java/com/mac/alert/
+├── config/                 # Spring beans, Kafka, Jackson, template, virtual thread
+│   └── properties/         # Type-safe alert configuration properties
+├── controller/             # REST endpoints and response mapping
+├── entities/
+│   ├── constant/           # Enums, error codes, and structured-log fields
+│   ├── dto/                # REST/Kafka request and response records
+│   ├── mapper/             # Request-to-command normalization
+│   └── model/              # Internal domain/persistence models
+├── job/                    # Scheduled pickup boundary
+├── repository/
+│   └── impl/               # JDBC persistence implementation
+├── service/
+│   └── impl/               # Alert creation, dispatch, email, template, attachment logic
+├── subscriber/             # Kafka listener boundary
+└── utils/
+    ├── exception/          # Alert-specific exceptions
+    └── handler/            # Async/scheduler/virtual-thread exception logging
+
+src/main/resources/
+├── db/migration/           # Versioned Flyway migrations
+├── templates/              # Email templates
+├── json/                   # Example payloads
+├── application.yaml
+└── application-local.yaml
+
+src/test/java/com/mac/alert/ # Unit and integration tests

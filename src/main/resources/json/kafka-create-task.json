@@ -1,0 +1,10 @@
+{
+  "topic": "task.create",
+  "key": "task-event-001",
+  "value": {
+    "eventId": "task-event-001",
+    "title": "Created from Kafka",
+    "description": "A minimal subscriber example",
+    "traceId": "trace-task-001"
+  }
+}

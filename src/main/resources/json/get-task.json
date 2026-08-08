@@ -1,0 +1,7 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/tasks/f59f3e08-4610-4e6c-b7fa-f1fb1e0e5df4"
+  },
+  "notes": "The service checks Redis first, then PostgreSQL, and stores a database hit in Redis."
+}

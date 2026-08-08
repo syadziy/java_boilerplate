@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: java-boilerplate
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/java_boilerplate}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: ${REDIS_TIMEOUT:2s}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_GROUP_ID:java-boilerplate}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.mac.boilerplate.entities.dto
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${SERVER_PORT:9010}
+
+task:
+  cache:
+    enabled: ${TASK_CACHE_ENABLED:true}
+    ttl: ${TASK_CACHE_TTL:10m}
+  cleanup:
+    enabled: ${TASK_CLEANUP_ENABLED:true}
+    cron: ${TASK_CLEANUP_CRON:0 0 2 * * *}
+    retention: ${TASK_CLEANUP_RETENTION:30d}
+  kafka:
+    enabled: ${TASK_KAFKA_ENABLED:true}
+    create-topic: ${TASK_KAFKA_CREATE_TOPIC:task.create}
+    dead-letter-topic: ${TASK_KAFKA_DLT_TOPIC:task.create.dlt}
+    retry-interval-ms: ${TASK_KAFKA_RETRY_INTERVAL_MS:1000}
+    max-retries: ${TASK_KAFKA_MAX_RETRIES:2}
+
+sdk:
+  timezone: ${APP_TIMEZONE:UTC}
+  web:
+    exception-handler:
+      enabled: true
+  logging:
+    ecs:
+      enabled: true
+    aspect:
+      enabled: true
+      packages: com.mac.boilerplate.service,com.mac.boilerplate.repository
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
