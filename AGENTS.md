@@ -35,6 +35,10 @@ Production package root harus tetap `com.mac.boilerplate`. Gunakan pemisahan ber
 - Gunakan `StructuredLog`, ECS fields, dan trace ID. Jangan log password, token, atau payload
   sensitif. Propagasi MDC secara eksplisit pada Kafka, scheduler, dan virtual thread.
 - Tangani exception Kafka dengan retry/DLT dan exception scheduler/async pada boundary-nya.
+- Susun setiap file application YAML per kelompok property utama dan beri banner komentar tiga
+  baris (`# =========================`, nama section uppercase, lalu separator yang sama), mengikuti
+  pola `DATABASE`, `KAFKA`, `SERVER`, `SHARED SDK`, dan `MANAGEMENT / ACTUATOR`. Pisahkan section
+  dengan satu baris kosong dan jangan mengubah hierarchy property hanya demi formatting.
 
 ## Testing
 

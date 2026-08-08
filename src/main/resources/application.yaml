@@ -3,17 +3,33 @@ spring:
     name: java-boilerplate
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+
+  # =========================
+  # DATABASE
+  # =========================
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/java_boilerplate}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
+
+  # =========================
+  # FLYWAY
+  # =========================
   flyway:
     enabled: true
+
+  # =========================
+  # REDIS
+  # =========================
   data:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       timeout: ${REDIS_TIMEOUT:2s}
+
+  # =========================
+  # KAFKA
+  # =========================
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
@@ -26,13 +42,23 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  # =========================
+  # VIRTUAL THREADS
+  # =========================
   threads:
     virtual:
       enabled: true
 
+# =========================
+# SERVER
+# =========================
 server:
   port: ${SERVER_PORT:9010}
 
+# =========================
+# TASK CONFIG
+# =========================
 task:
   cache:
     enabled: ${TASK_CACHE_ENABLED:true}
@@ -48,6 +74,9 @@ task:
     retry-interval-ms: ${TASK_KAFKA_RETRY_INTERVAL_MS:1000}
     max-retries: ${TASK_KAFKA_MAX_RETRIES:2}
 
+# =========================
+# SHARED SDK
+# =========================
 sdk:
   timezone: ${APP_TIMEZONE:UTC}
   web:
@@ -60,6 +89,9 @@ sdk:
       enabled: true
       packages: com.mac.boilerplate.service,com.mac.boilerplate.repository
 
+# =========================
+# MANAGEMENT / ACTUATOR
+# =========================
 management:
   endpoints:
     web:
