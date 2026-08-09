@@ -96,7 +96,9 @@ mvn spring-boot:run
 ```
 
 Profile `local` menonaktifkan security agar contoh mudah dicoba. Aktifkan dan konfigurasi security
-`sdk-util` sebelum digunakan di environment nyata.
+`sdk-util` sebelum digunakan di environment nyata. Default issuer adalah `usermanagement` pada
+`http://localhost:9005`; SDK mengambil public RSA key melalui discovery/JWKS dan memakai claim
+`username`, `roles`, serta `permissions`.
 
 ## REST API
 

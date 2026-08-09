@@ -33,6 +33,8 @@ Production package root harus tetap `com.mac.boilerplate`. Gunakan pemisahan ber
   abstraction yang memakai mekanisme clear aman dari provider.
 - Validasi REST menggunakan Jakarta Validation. Kafka event wajib divalidasi eksplisit.
 - Gunakan global HTTP exception handler dan response helper dari `sdk-util`.
+- Untuk security, gunakan `usermanagement` sebagai issuer JWT utama, claim principal `username`,
+  dan authority `ROLE_*`/`PERM_*` dari converter `sdk-util`; jangan membagikan signing private key.
 - Pesan untuk client harus dalam bahasa Inggris dan tidak boleh mengekspos stack trace/secret.
 - Gunakan `StructuredLog`, ECS fields, dan trace ID. Jangan log password, token, atau payload
   sensitif. Propagasi MDC secara eksplisit pada Kafka, scheduler, dan virtual thread.
