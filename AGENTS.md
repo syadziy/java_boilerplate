@@ -35,6 +35,9 @@ Production package root harus tetap `com.mac.boilerplate`. Gunakan pemisahan ber
 - Gunakan global HTTP exception handler dan response helper dari `sdk-util`.
 - Untuk security, gunakan `usermanagement` sebagai issuer JWT utama, claim principal `username`,
   dan authority `ROLE_*`/`PERM_*` dari converter `sdk-util`; jangan membagikan signing private key.
+- Jangan deklarasikan atau override `sdk.security.permit-all-paths` pada boilerplate maupun service
+  turunannya. Daftar public path canonical dimiliki oleh `sdk_util`; perubahan harus dilakukan dan
+  diuji di SDK karena berdampak pada seluruh consumer.
 - Pesan untuk client harus dalam bahasa Inggris dan tidak boleh mengekspos stack trace/secret.
 - Gunakan `StructuredLog`, ECS fields, dan trace ID. Jangan log password, token, atau payload
   sensitif. Propagasi MDC secara eksplisit pada Kafka, scheduler, dan virtual thread.
