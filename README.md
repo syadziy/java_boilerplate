@@ -4,6 +4,9 @@ Contoh service sederhana berbasis Java 21 dan Spring Boot 4.1.0. Domain contoh a
 task dapat dibuat melalui REST atau Kafka, disimpan di PostgreSQL, dibaca dengan pola Redis
 cache-aside, diselesaikan melalui REST, dan dibersihkan oleh scheduler.
 
+JVM, JDBC session, persisted timestamps, logs, dan API timestamps menggunakan UTC secara default
+melalui `APP_TIMEZONE=UTC`.
+
 ## Teknologi
 
 - Java 21 dan virtual threads
@@ -139,6 +142,20 @@ mvn clean verify
 
 JaCoCo menggagalkan build bila line coverage production business code kurang dari 90%. Laporan
 HTML tersedia di `target/site/jacoco/index.html`.
+
+## Docker
+
+Image hanya memuat JRE Java 21 dan JAR aplikasi. Build JAR lebih dahulu agar dependency sibling
+`sdk-util` tetap diselesaikan oleh Maven lokal atau CI:
+
+```bash
+mvn clean package
+docker build -t java-boilerplate:1.0.0 .
+docker run --rm --env-file .env -p 9010:9010 java-boilerplate:1.0.0
+```
+
+Isi `.env` dari `.env.example`, lalu ubah host dependency `localhost` menjadi nama service pada
+Docker network. Jangan masukkan credential ke image atau repository.
 
 ## Catatan produksi
 

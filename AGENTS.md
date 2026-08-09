@@ -23,6 +23,8 @@ Production package root harus tetap `com.mac.boilerplate`. Gunakan pemisahan ber
 
 - Gunakan Java 21, records untuk immutable data, constructor injection, `Instant`, dan injected
   `Clock`.
+- Gunakan UTC untuk timezone JVM, koneksi database, log, dan timestamp API. Konversi ke timezone
+  regional hanya pada presentation atau business-scheduling boundary yang eksplisit.
 - Controller tidak boleh berisi SQL, Redis, Kafka, atau keputusan bisnis.
 - Gunakan parameterized SQL dan Flyway untuk setiap perubahan schema.
 - PostgreSQL adalah source of truth. Redis hanya cache best-effort; cache outage tidak boleh
