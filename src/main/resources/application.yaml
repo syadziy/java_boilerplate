@@ -9,14 +9,27 @@ spring:
   # =========================
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/java_boilerplate}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:admin_macbook}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: centralized-alert-pool
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:10}
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   # =========================
   # FLYWAY
   # =========================
   flyway:
     enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+    validate-on-migrate: true
+    clean-disabled: true
 
   # =========================
   # REDIS
@@ -83,11 +96,44 @@ sdk:
     exception-handler:
       enabled: true
   logging:
-    ecs:
+    structured:
       enabled: true
+      format: ecs
+      auto-configure-format: true
+      trace-header: X-Correlation-Id
+      trace-response-header: true
     aspect:
       enabled: true
-      packages: com.mac.boilerplate.service,com.mac.boilerplate.repository
+      packages: com.mac.java_boilerplate.service,com.mac.java_boilerplate.repository
+  security:
+    enabled: ${SDK_SECURITY_ENABLED:true}
+    csrf-disabled: true
+    jwt-issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/boilerplate}
+    session-creation-policy: STATELESS
+    permit-all-paths:
+      - /actuator/health/**
+      - /actuator/info/**
+      - /v3/api-docs/**
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /error
+    method-security-enabled: ${SDK_METHOD_SECURITY_ENABLED:true}
+    cors:
+      enabled: ${SDK_CORS_ENABLED:false}
+  openapi:
+    enabled: true
+    title: Java Boilerplate API
+    description: Read-only API for java boilerplate
+    version: 1.0.0
+
+# =========================
+# JWT CONVERTER
+# =========================
+jwt:
+  auth:
+    converter:
+      principle-attribute: preferred_username
+      resource-id: java-boilerplate
 
 # =========================
 # MANAGEMENT / ACTUATOR
@@ -95,9 +141,50 @@ sdk:
 management:
   endpoints:
     web:
+      base-path: /actuator
       exposure:
-        include: health,info,prometheus
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
   endpoint:
     health:
+      show-details: when-authorized
       probes:
         enabled: true
+    prometheus:
+      access: unrestricted
+  health:
+    db:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE:local}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:0.1}
+
+# =========================
+# LOGGING
+# =========================
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.mac.java_boilerplate: ${LOG_LEVEL_APPLICATION:INFO}
+    org.springframework.kafka: ${LOG_LEVEL_KAFKA:INFO}
+    org.springframework.security: ${LOG_LEVEL_SECURITY:INFO}
+    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL:WARN}
+    org.hibernate.orm.jdbc.bind: ${LOG_LEVEL_HIBERNATE_BIND:WARN}
+  structured:
+    format:
+      console: ecs
+      file: ecs
+    ecs:
+      service:
+        environment: ${SPRING_PROFILES_ACTIVE:local}

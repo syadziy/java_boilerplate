@@ -8,3 +8,16 @@ sdk:
       enabled: false
     cors:
       enabled: false
+
+  # =========================
+  # LOCAL LOGGING OVERRIDES
+  # =========================
+  logging:
+    structured:
+      enabled: true
+      auto-configure-format: false
+
+logging:
+  structured:
+    format:
+      console: ""
