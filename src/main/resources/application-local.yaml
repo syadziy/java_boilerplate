@@ -3,9 +3,8 @@
 # =========================
 sdk:
   security:
-    enabled: false
-    method:
-      enabled: false
+    enabled: true
+    method-security-enabled: false
     cors:
       enabled: false
 
