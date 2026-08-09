@@ -100,6 +100,10 @@ Profile `local` menonaktifkan security agar contoh mudah dicoba. Aktifkan dan ko
 `http://localhost:9005`; SDK mengambil public RSA key melalui discovery/JWKS dan memakai claim
 `username`, `roles`, serta `permissions`.
 
+Path `/internal/**` tidak memerlukan JWT. Service baru yang memakai boilerplate ini wajib menjaga
+path tersebut hanya pada trusted internal network melalui ingress rule, network policy, atau
+service mesh.
+
 ## REST API
 
 Membuat task:
