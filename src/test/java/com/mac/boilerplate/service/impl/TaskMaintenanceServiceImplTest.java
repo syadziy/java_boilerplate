@@ -20,7 +20,9 @@ class TaskMaintenanceServiceImplTest {
         TaskCacheRepository cache = mock(TaskCacheRepository.class);
         Instant now = Instant.parse("2026-08-09T00:00:00Z");
         var properties = new TaskProperties(new TaskProperties.Cache(Duration.ofMinutes(10)),
-                new TaskProperties.Cleanup(Duration.ofDays(30)));
+                new TaskProperties.Cleanup(Duration.ofDays(30)),
+                new TaskProperties.Reporting(Duration.ofMinutes(5), Duration.ofDays(30), "task-search",
+                        "task_audit"));
         var service = new TaskMaintenanceServiceImpl(
                 repository, cache, properties, Clock.fixed(now, ZoneOffset.UTC));
         Instant cutoff = now.minus(Duration.ofDays(30));

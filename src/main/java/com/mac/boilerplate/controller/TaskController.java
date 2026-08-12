@@ -4,7 +4,7 @@ import com.mac.boilerplate.entities.dto.CreateTaskRequest;
 import com.mac.boilerplate.entities.dto.TaskResponse;
 import com.mac.boilerplate.service.TaskService;
 import com.mac.sdk_util.entities.dto.ResponseDTO;
-import com.mac.sdk_util.utils.ResponseHelper;
+import com.mac.sdk_util.helper.ResponseHelper;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.UUID;

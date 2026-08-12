@@ -12,6 +12,7 @@ import com.mac.boilerplate.entities.mapper.TaskMapper;
 import com.mac.boilerplate.entities.model.Task;
 import com.mac.boilerplate.repository.TaskCacheRepository;
 import com.mac.boilerplate.repository.TaskRepository;
+import com.mac.boilerplate.service.TaskProjectionSyncService;
 import com.mac.boilerplate.utils.exception.InvalidTaskStateException;
 import com.mac.sdk_util.exception.ResourceNotFoundException;
 import java.time.Clock;
@@ -27,13 +28,16 @@ class TaskServiceImplTest {
     private static final Instant NOW = Instant.parse("2026-08-09T00:00:00Z");
     private TaskRepository repository;
     private TaskCacheRepository cache;
+    private TaskProjectionSyncService syncService;
     private TaskServiceImpl service;
 
     @BeforeEach
     void setUp() {
         repository = mock(TaskRepository.class);
         cache = mock(TaskCacheRepository.class);
-        service = new TaskServiceImpl(repository, cache, new TaskMapper(), Clock.fixed(NOW, ZoneOffset.UTC));
+        syncService = mock(TaskProjectionSyncService.class);
+        service = new TaskServiceImpl(
+                repository, cache, syncService, new TaskMapper(), Clock.fixed(NOW, ZoneOffset.UTC));
     }
 
     @Test
@@ -45,6 +49,7 @@ class TaskServiceImplTest {
         assertThat(result.title()).isEqualTo("title");
         assertThat(result.createdAt()).isEqualTo(NOW);
         verify(cache).put(result);
+        verify(syncService).syncTask(result, "TASK_CREATED");
     }
 
     @Test
@@ -83,6 +88,7 @@ class TaskServiceImplTest {
 
         assertThat(service.complete(completed.id()).status()).isEqualTo(TaskStatus.COMPLETED);
         verify(cache).evict(completed.id());
+        verify(syncService).syncTask(any(), eq("TASK_COMPLETED"));
     }
 
     @Test

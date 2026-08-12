@@ -1,0 +1,162 @@
+{
+  "info": {
+    "name": "Java Boilerplate Demo",
+    "_postman_id": "3d4f2c2c-7f0d-4cdd-9f74-3b6d8e4f8a11",
+    "description": "Demo collection for task commands, reporting, search, dashboard, and audit trail.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Task Commands",
+      "item": [
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "postman-task-create-001"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Prepare Java demo\",\n  \"description\": \"Show IoC, Stream, Kafka, Redis, MongoDB, and Elasticsearch\"\n}"
+            },
+            "description": "Creates a new task, stores it in PostgreSQL, caches it in Redis, and syncs projections."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body && body.data && body.data.id) {",
+                  "  pm.environment.set('taskId', body.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Seed Task",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{seedTaskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{seedTaskId}}"]
+            },
+            "description": "Reads a seeded task using cache-aside flow."
+          }
+        },
+        {
+          "name": "Complete Seed Task",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{seedTaskId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "{{seedTaskId}}", "complete"]
+            },
+            "description": "Completes a seeded task and refreshes projections."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Task Insights",
+      "item": [
+        {
+          "name": "Search Tasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/insights/search?query=redis&status=PENDING&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "insights", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "redis"
+                },
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Runs native SQL reporting with optional filters."
+          }
+        },
+        {
+          "name": "Search Index",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/insights/search/index?query=demo&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "insights", "search", "index"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "demo"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Reads the Elasticsearch-backed task index."
+          }
+        },
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/insights/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "insights", "dashboard"]
+            },
+            "description": "Shows task summary using Java Stream aggregation."
+          }
+        },
+        {
+          "name": "Audit Trail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/insights/{{seedTaskId}}/audit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "tasks", "insights", "{{seedTaskId}}", "audit"]
+            },
+            "description": "Reads MongoDB audit trail for a seeded task."
+          }
+        }
+      ]
+    }
+  ]
+}

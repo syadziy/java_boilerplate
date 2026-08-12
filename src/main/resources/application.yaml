@@ -41,6 +41,25 @@ spring:
       port: ${REDIS_PORT:6379}
       timeout: ${REDIS_TIMEOUT:2s}
 
+    # =========================
+    # MONGODB
+    # =========================
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/java_boilerplate}
+      auto-index-creation: true
+
+    # =========================
+    # ELASTICSEARCH
+    # =========================
+    elasticsearch:
+      repositories:
+        enabled: true
+
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
+    connection-timeout: ${ELASTICSEARCH_CONNECTION_TIMEOUT:2s}
+    socket-timeout: ${ELASTICSEARCH_SOCKET_TIMEOUT:5s}
+
   # =========================
   # KAFKA
   # =========================
@@ -87,6 +106,11 @@ task:
     dead-letter-topic: ${TASK_KAFKA_DLT_TOPIC:task.create.dlt}
     retry-interval-ms: ${TASK_KAFKA_RETRY_INTERVAL_MS:1000}
     max-retries: ${TASK_KAFKA_MAX_RETRIES:2}
+  reporting:
+    cache-ttl: ${TASK_REPORTING_CACHE_TTL:5m}
+    default-window: ${TASK_REPORTING_DEFAULT_WINDOW:P30D}
+    elastic-index: ${TASK_SEARCH_INDEX:task-search}
+    audit-collection: ${TASK_AUDIT_COLLECTION:task_audit}
 
 # =========================
 # SHARED SDK

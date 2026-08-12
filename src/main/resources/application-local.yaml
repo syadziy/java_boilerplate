@@ -8,15 +8,20 @@ sdk:
     cors:
       enabled: false
 
-  # =========================
-  # LOCAL LOGGING OVERRIDES
-  # =========================
-  logging:
-    structured:
-      enabled: true
-      auto-configure-format: false
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/java_boilerplate}
+
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
 
 logging:
   structured:
+    # =========================
+    # LOCAL LOGGING OVERRIDES
+    # =========================
     format:
       console: ""
+    enabled: true
+    auto-configure-format: false

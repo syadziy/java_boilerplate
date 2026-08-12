@@ -3,6 +3,9 @@
     "create-task.json",
     "get-task.json",
     "complete-task.json",
-    "kafka-create-task.json"
+    "kafka-create-task.json",
+    "../db/migration/V3__seed_demo_tasks.sql",
+    "../postman/Java-Boilerplate.postman_collection.json",
+    "../postman/Java-Boilerplate.local.postman_environment.json"
   ]
 }

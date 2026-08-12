@@ -6,6 +6,7 @@ import com.mac.boilerplate.entities.mapper.TaskMapper;
 import com.mac.boilerplate.repository.TaskCacheRepository;
 import com.mac.boilerplate.repository.TaskRepository;
 import com.mac.boilerplate.service.TaskService;
+import com.mac.boilerplate.service.TaskProjectionSyncService;
 import com.mac.boilerplate.utils.exception.InvalidTaskStateException;
 import com.mac.sdk_util.exception.ResourceNotFoundException;
 import java.time.Clock;
@@ -19,16 +20,19 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
     private final TaskCacheRepository cacheRepository;
+    private final TaskProjectionSyncService projectionSyncService;
     private final TaskMapper mapper;
     private final Clock clock;
 
     public TaskServiceImpl(
             TaskRepository repository,
             TaskCacheRepository cacheRepository,
+            TaskProjectionSyncService projectionSyncService,
             TaskMapper mapper,
             Clock clock) {
         this.repository = repository;
         this.cacheRepository = cacheRepository;
+        this.projectionSyncService = projectionSyncService;
         this.mapper = mapper;
         this.clock = clock;
     }
@@ -39,6 +43,7 @@ public class TaskServiceImpl implements TaskService {
         var task = mapper.toModel(request, UUID.randomUUID(), clock.instant());
         var response = mapper.toResponse(repository.save(task));
         cacheRepository.put(response);
+        projectionSyncService.syncTask(response, "TASK_CREATED");
         return response;
     }
 
@@ -65,6 +70,8 @@ public class TaskServiceImpl implements TaskService {
             throw new InvalidTaskStateException("Only pending tasks can be completed");
         }
         cacheRepository.evict(id);
-        return findById(id);
+        TaskResponse response = findById(id);
+        projectionSyncService.syncTask(response, "TASK_COMPLETED");
+        return response;
     }
 }
